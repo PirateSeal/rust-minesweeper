@@ -157,6 +157,18 @@ mod tests {
     };
 
     #[test]
+    fn test_new() {
+        let width = random_range(1, 10);
+        let height = random_range(1, 10);
+        let mine_count = random_range(1, width * height);
+        let minesweeper = Minesweeper::new(width, height, mine_count);
+
+        assert_eq!(minesweeper.width, width);
+        assert_eq!(minesweeper.height, height);
+        assert_eq!(minesweeper.mines.len(), mine_count);
+    }
+
+    #[test]
     fn check_mine_number() {
         let width = random_range(1, 20);
         let height = random_range(1, 20);
@@ -165,6 +177,25 @@ mod tests {
         let ms = Minesweeper::new(width, height, mine_count);
 
         assert_eq!(ms.mines.len(), mine_count);
+    }
+
+    #[test]
+    fn check_open() {
+        let width = random_range(1, 20);
+        let height = random_range(1, 20);
+        let mine_count: usize = random_range(0, width / 2);
+
+        let opened_position: Position = (random_range(0, width), random_range(0, height));
+
+        let mut ms = Minesweeper::new(width, height, mine_count);
+
+        ms.open(opened_position);
+
+        if ms.mines.contains(&opened_position) {
+            assert!(ms.lost);
+        } else {
+            assert!(ms.open_fields.contains(&opened_position));
+        }
     }
 
     #[test]
